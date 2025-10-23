@@ -1,0 +1,14 @@
+#Game {
+  height: 100vh;
+  display: grid;
+  grid-template: repeat(10, 1fr) / repeat(10, 1fr);
+
+  .cell {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    text-align: center;
+    line-height: 1fr;
+    font-size: 24px;
+    cursor: pointer;
+  }
+}
