@@ -21,6 +21,10 @@
 
     &[data-state="revealed"] {
       background-color: #fff;
+
+      &[data-is-mine="true"] {
+        background-color: #f00;
+      }
     }
   }
 }

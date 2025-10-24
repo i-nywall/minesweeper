@@ -54,6 +54,10 @@ function clickCell(cell) {
 // Reveals a cell and its neighbors if it's empty
 function revealCell(cell) {
   if (cell.dataset.state === "revealed") return;
+  if (cell.dataset.isMine === "true") {
+    gameOver();
+    return;
+  }
 
   gameState.revealedCells += 1;
 
@@ -142,6 +146,16 @@ function generateMinePositions(excludedPosition) {
     }
   }
   return mines;
+}
+
+function gameOver() {
+  const cells = document.querySelectorAll(".cell");
+  // for now just reveal all mines
+  cells.forEach((cell) => {
+    if (cell.dataset.isMine === "true") {
+      cell.dataset.state = "revealed";
+    }
+  });
 }
 
 function initializeGame() {
