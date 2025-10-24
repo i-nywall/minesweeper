@@ -64,6 +64,8 @@ function revealCell(cell) {
 
   if (neighboringMines === 0) {
     neighborCells.forEach(revealCell);
+  } else {
+    cell.textContent = neighboringMines;
   }
 }
 
