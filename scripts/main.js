@@ -4,6 +4,10 @@ const gameSettings = {
   mines: 10,
 };
 
+const gameState = {
+  revealedCells: 0,
+};
+
 const game = document.getElementById("Game");
 
 function fillBoard() {
@@ -19,9 +23,9 @@ function fillBoard() {
       cellElement.dataset.flagged = "false";
       cellElement.classList.add("cell");
 
-      cellElement.addEventListener("click", () => {
-        revealCell(cellElement);
-      });
+      cellElement.addEventListener("click", (event) =>
+        clickCell(event.currentTarget),
+      );
 
       cells.push(cellElement);
       fragment.appendChild(cellElement);
@@ -37,16 +41,28 @@ function fillBoard() {
   return cells;
 }
 
+function clickCell(cell) {
+  // We only generate the mines after first click
+  // This avoids player losing immediately
+  if (gameState.revealedCells === 0) {
+    placeMines(cell); // cell is excluded
+  }
+
+  revealCell(cell);
+}
+
 // Reveals a cell and its neighbors if it's empty
 function revealCell(cell) {
   if (cell.dataset.state === "revealed") return;
 
+  gameState.revealedCells += 1;
+
   cell.dataset.state = "revealed";
   const neighborPositions = getNeighbors(getPositionFromCell(cell));
   const neighborCells = neighborPositions.map(getCell);
-  const neighboringBombs = neighborCells.filter(isBomb).length;
+  const neighboringMines = neighborCells.filter(isMine).length;
 
-  if (neighboringBombs === 0) {
+  if (neighboringMines === 0) {
     neighborCells.forEach(revealCell);
   }
 }
@@ -91,13 +107,39 @@ function isValidPosition(position) {
   );
 }
 
-function isBomb(cell) {
-  return cell.dataset.bomb === "true";
+function isMine(cell) {
+  return cell.dataset.isMine === "true";
 }
 
 // Check if two positions are equal
 function isSamePosition(a, b) {
   return a.row === b.row && a.col === b.col;
+}
+
+function placeMines(excludedCell) {
+  const mines = generateMinePositions(getPositionFromCell(excludedCell));
+  mines.forEach((mine) => {
+    const cell = getCell(mine);
+    cell.dataset.isMine = "true";
+  });
+}
+
+function generateMinePositions(excludedPosition) {
+  const mines = [];
+  while (mines.length < gameSettings.mines) {
+    const row = Math.floor(Math.random() * gameSettings.rows);
+    const col = Math.floor(Math.random() * gameSettings.columns);
+    const position = { row, col };
+    if (
+      !(
+        mines.some((mine) => isSamePosition(mine, position)) ||
+        isSamePosition(position, excludedPosition)
+      )
+    ) {
+      mines.push(position);
+    }
+  }
+  return mines;
 }
 
 function initializeGame() {
