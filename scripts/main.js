@@ -132,6 +132,11 @@ function revealCell(cell) {
   // make sure to remove flag from cell when revealed
   removeFlag(cell);
 
+  if (winCondition()) {
+    winGame();
+    return;
+  }
+
   const neighborPositions = getNeighbors(getPositionFromCell(cell));
   const neighborCells = neighborPositions.map(getCell);
   const neighboringMines = neighborCells.filter(isMine).length;
@@ -219,7 +224,20 @@ function generateMinePositions(excludedPosition) {
   return mines;
 }
 
+// Check if hidden cells are equal to mines
+// this means you win
+function winCondition() {
+  const hiddenCells = document.querySelectorAll(".cell[data-state='hidden']");
+  const mines = document.querySelectorAll(".cell[data-is-mine='true']");
+  return hiddenCells.length === mines.length;
+}
+
+function winGame() {
+  alert("You win!");
+}
+
 function gameOver() {
+  alert("Game Over!");
   const cells = document.querySelectorAll(".cell");
   // for now just reveal all mines
   cells.forEach((cell) => {
