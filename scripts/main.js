@@ -51,7 +51,11 @@ function handleCellClick(event) {
   if (cell.dataset.isFlagged === "true") {
     toggleFlag(cell);
   } else {
-    revealCell(cell);
+    if (cell.dataset.state === "revealed") {
+      revealUnflaggedCells(cell);
+    } else {
+      revealCell(cell);
+    }
   }
 }
 
@@ -59,7 +63,22 @@ function handleCellRightClick(event) {
   // disable context menu
   event.preventDefault();
   const cell = event.currentTarget;
-  toggleFlag(cell);
+  if (cell.dataset.state === "revealed") {
+    flagNeighbors(cell);
+  } else {
+    toggleFlag(cell);
+  }
+}
+
+// Flags all hidden neighbors if they match the number of neighboring mines
+function flagNeighbors(cell) {
+  const hiddenNeighbors = getNeighbors(getPositionFromCell(cell))
+    .map(getCell)
+    .filter((cell) => cell.dataset.state === "hidden");
+
+  if (hiddenNeighbors.length == cell.dataset.neighboringMines) {
+    hiddenNeighbors.forEach(addFlag);
+  }
 }
 
 function toggleFlag(cell) {
@@ -83,6 +102,18 @@ function removeFlag(cell) {
   gameState.flaggedCells -= 1;
 }
 
+// Reveals all surrounding cells that are not flagged only if
+// the number of flagged cells match the number of mines
+function revealUnflaggedCells(cell) {
+  const unflaggedNeighbors = getNeighbors(getPositionFromCell(cell))
+    .map(getCell)
+    .filter((cell) => cell.dataset.isFlagged === "false");
+
+  if (unflaggedNeighbors.length == 8 - cell.dataset.neighboringMines) {
+    unflaggedNeighbors.forEach(revealCell);
+  }
+}
+
 // Reveals a cell and its neighbors if it's empty
 function revealCell(cell) {
   if (cell.dataset.state === "revealed") return;
@@ -104,6 +135,7 @@ function revealCell(cell) {
   if (neighboringMines === 0) {
     neighborCells.forEach(revealCell);
   } else {
+    cell.dataset.neighboringMines = neighboringMines;
     cell.textContent = neighboringMines;
   }
 }
