@@ -105,11 +105,15 @@ function removeFlag(cell) {
 // Reveals all surrounding cells that are not flagged only if
 // the number of flagged cells match the number of mines
 function revealUnflaggedCells(cell) {
-  const unflaggedNeighbors = getNeighbors(getPositionFromCell(cell))
+  const neighborPositions = getNeighbors(getPositionFromCell(cell));
+  const unflaggedNeighbors = neighborPositions
     .map(getCell)
     .filter((cell) => cell.dataset.isFlagged === "false");
 
-  if (unflaggedNeighbors.length == 8 - cell.dataset.neighboringMines) {
+  if (
+    unflaggedNeighbors.length ==
+    neighborPositions.length - cell.dataset.neighboringMines
+  ) {
     unflaggedNeighbors.forEach(revealCell);
   }
 }
