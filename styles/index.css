@@ -26,5 +26,9 @@
         background-color: #f00;
       }
     }
+
+    &[data-is-flagged="true"] {
+      background-color: #0ff;
+    }
   }
 }

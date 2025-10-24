@@ -6,6 +6,7 @@ const gameSettings = {
 
 const gameState = {
   revealedCells: 0,
+  flaggedCells: 0,
 };
 
 const game = document.getElementById("Game");
@@ -20,12 +21,11 @@ function fillBoard() {
       cellElement.dataset.row = row;
       cellElement.dataset.col = col;
       cellElement.dataset.state = "hidden";
-      cellElement.dataset.flagged = "false";
+      cellElement.dataset.isFlagged = "false";
       cellElement.classList.add("cell");
 
-      cellElement.addEventListener("click", (event) =>
-        clickCell(event.currentTarget),
-      );
+      cellElement.addEventListener("click", handleCellClick);
+      cellElement.addEventListener("contextmenu", handleCellRightClick);
 
       cells.push(cellElement);
       fragment.appendChild(cellElement);
@@ -41,14 +41,46 @@ function fillBoard() {
   return cells;
 }
 
-function clickCell(cell) {
+function handleCellClick(event) {
+  const cell = event.currentTarget;
   // We only generate the mines after first click
   // This avoids player losing immediately
   if (gameState.revealedCells === 0) {
     placeMines(cell); // cell is excluded
   }
+  if (cell.dataset.isFlagged === "true") {
+    toggleFlag(cell);
+  } else {
+    revealCell(cell);
+  }
+}
 
-  revealCell(cell);
+function handleCellRightClick(event) {
+  // disable context menu
+  event.preventDefault();
+  const cell = event.currentTarget;
+  toggleFlag(cell);
+}
+
+function toggleFlag(cell) {
+  if (cell.dataset.state === "revealed") return;
+  if (cell.dataset.isFlagged === "true") {
+    removeFlag(cell);
+  } else {
+    addFlag(cell);
+  }
+}
+
+function addFlag(cell) {
+  if (cell.dataset.isFlagged === "true") return;
+  cell.dataset.isFlagged = "true";
+  gameState.flaggedCells += 1;
+}
+
+function removeFlag(cell) {
+  if (cell.dataset.isFlagged === "false") return;
+  cell.dataset.isFlagged = "false";
+  gameState.flaggedCells -= 1;
 }
 
 // Reveals a cell and its neighbors if it's empty
@@ -62,6 +94,9 @@ function revealCell(cell) {
   gameState.revealedCells += 1;
 
   cell.dataset.state = "revealed";
+  // make sure to remove flag from cell when revealed
+  removeFlag(cell);
+
   const neighborPositions = getNeighbors(getPositionFromCell(cell));
   const neighborCells = neighborPositions.map(getCell);
   const neighboringMines = neighborCells.filter(isMine).length;
