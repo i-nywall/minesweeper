@@ -1,13 +1,21 @@
 #Game {
-  height: 100vh;
   display: grid;
-  grid-template: repeat(10, 1fr) / repeat(10, 1fr);
+
+  /*Since there's no good way to make cells square and also fit the screen,
+     I instead calculate a cell size that fits the screen.
+  */
+  --square-cell-width: calc(100vw / var(--board-columns));
+  --square-cell-height: calc(100vh / var(--board-rows));
+  --square-cell-size: min(var(--square-cell-width), var(--square-cell-height));
+
+  grid-template-rows: repeat(var(--board-rows), var(--square-cell-size));
+  grid-template-columns: repeat(var(--board-columns), var(--square-cell-size));
+  justify-content: center;
 
   .cell {
     background-color: #f0f0f0;
     border: 1px solid #ccc;
     text-align: center;
-    line-height: 1fr;
     font-size: 24px;
     cursor: pointer;
   }
