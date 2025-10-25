@@ -9,25 +9,26 @@ const gameState = {
   flaggedCells: 0,
 };
 
+const cellListeners = Object.freeze({
+  click: handleCellClick,
+  contextmenu: handleCellRightClick,
+});
+
 const game = document.getElementById("Game");
 
+initializeGame();
+
+function initializeGame() {
+  fillBoard();
+}
+
 function fillBoard() {
-  const cells = [];
   const fragment = document.createDocumentFragment();
 
   for (let row = 0; row < gameSettings.rows; row++) {
     for (let col = 0; col < gameSettings.columns; col++) {
-      const cellElement = document.createElement("div");
-      cellElement.dataset.row = row;
-      cellElement.dataset.col = col;
-      cellElement.dataset.state = "hidden";
-      cellElement.dataset.isFlagged = "false";
-      cellElement.classList.add("cell");
-
-      cellElement.addEventListener("click", handleCellClick);
-      cellElement.addEventListener("contextmenu", handleCellRightClick);
-
-      cells.push(cellElement);
+      const cellElement = createCell(row, col);
+      enableCell(cellElement);
       fragment.appendChild(cellElement);
     }
   }
@@ -37,8 +38,28 @@ function fillBoard() {
     "--board-columns",
     gameSettings.columns,
   );
+}
 
-  return cells;
+function createCell(row, col) {
+  const cellElement = document.createElement("div");
+  cellElement.dataset.row = row;
+  cellElement.dataset.col = col;
+  cellElement.dataset.state = "hidden";
+  cellElement.dataset.isFlagged = "false";
+  cellElement.classList.add("cell");
+  return cellElement;
+}
+
+function enableCell(cell) {
+  Object.entries(cellListeners).forEach(([type, callback]) => {
+    cell.addEventListener(type, callback);
+  });
+}
+
+function disableCell(cell) {
+  Object.entries(cellListeners).forEach(([type, callback]) => {
+    cell.removeEventListener(type, callback);
+  });
 }
 
 function handleCellClick(event) {
@@ -246,9 +267,3 @@ function gameOver() {
     }
   });
 }
-
-function initializeGame() {
-  const cells = fillBoard();
-}
-
-initializeGame();
