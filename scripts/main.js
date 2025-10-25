@@ -255,6 +255,8 @@ function winCondition() {
 
 function winGame() {
   alert("You win!");
+  const cells = document.querySelectorAll(".cell");
+  cells.forEach(disableCell);
 }
 
 function gameOver() {
@@ -262,6 +264,7 @@ function gameOver() {
   const cells = document.querySelectorAll(".cell");
   // for now just reveal all mines
   cells.forEach((cell) => {
+    disableCell(cell);
     if (cell.dataset.isMine === "true") {
       cell.dataset.state = "revealed";
     }
