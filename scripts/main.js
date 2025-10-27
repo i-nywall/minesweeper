@@ -7,6 +7,9 @@ const gameSettings = {
 const gameState = {
   revealedCells: 0,
   flaggedCells: 0,
+  startedAt: null,
+  endedAt: null,
+  timerInterval: null,
 };
 
 const cellListeners = Object.freeze({
@@ -40,6 +43,36 @@ function fillBoard() {
   );
 }
 
+function startGame(startingCell) {
+  placeMines(startingCell); // cell is excluded
+  startTimer();
+}
+
+function startTimer() {
+  gameState.startedAt = Date.now();
+  gameState.timerInterval = setInterval(() => {
+    const elapsed = Date.now() - gameState.startedAt;
+    document.querySelector(".timer").textContent = formatTime(elapsed);
+  }, 1000);
+}
+
+function formatTime(ms) {
+  const seconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+
+  const formattedHours = (hours % 24).toString().padStart(2, "0");
+  const formattedMinutes = (minutes % 60).toString().padStart(2, "0");
+  const formattedSeconds = (seconds % 60).toString().padStart(2, "0");
+
+  return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+}
+
+function endTimer() {
+  gameState.endedAt = Date.now();
+  clearInterval(gameState.timerInterval);
+}
+
 function createCell(row, col) {
   const cellElement = document.createElement("div");
   cellElement.dataset.row = row;
@@ -67,7 +100,7 @@ function handleCellClick(event) {
   // We only generate the mines after first click
   // This avoids player losing immediately
   if (gameState.revealedCells === 0) {
-    placeMines(cell); // cell is excluded
+    startGame(cell);
   }
   if (cell.dataset.isFlagged === "true") {
     toggleFlag(cell);
@@ -257,6 +290,7 @@ function winGame() {
   alert("You win!");
   const cells = document.querySelectorAll(".cell");
   cells.forEach(disableCell);
+  endTimer();
 }
 
 function gameOver() {
@@ -269,4 +303,5 @@ function gameOver() {
       cell.dataset.state = "revealed";
     }
   });
+  endTimer();
 }
