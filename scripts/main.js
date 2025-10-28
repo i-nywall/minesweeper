@@ -59,6 +59,7 @@ function initializeGame() {
 function resetGame() {
   // set game state to default
   gameState = { ...defaultGameState };
+  updateMineCount();
 }
 
 function fillBoard() {
@@ -184,12 +185,19 @@ function addFlag(cell) {
   if (cell.dataset.isFlagged === "true") return;
   cell.dataset.isFlagged = "true";
   gameState.flaggedCells += 1;
+  updateMineCount();
 }
 
 function removeFlag(cell) {
   if (cell.dataset.isFlagged === "false") return;
   cell.dataset.isFlagged = "false";
   gameState.flaggedCells -= 1;
+  updateMineCount();
+}
+
+function updateMineCount() {
+  document.querySelector(".mine-count").textContent =
+    gameSettings.mines - gameState.flaggedCells;
 }
 
 // Reveals all surrounding cells that are not flagged only if
