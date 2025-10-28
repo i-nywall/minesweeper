@@ -30,5 +30,10 @@
     &[data-is-flagged="true"] {
       background-color: #0ff;
     }
+
+    /* Hide number for cells with no neighboring mines */
+    &[data-neighboring-mines="0"] {
+      color: transparent;
+    }
   }
 }
