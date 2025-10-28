@@ -13,10 +13,12 @@
   justify-content: center;
 
   .cell {
+    display: grid;
+    place-content: center;
     background-color: #f0f0f0;
     border: 1px solid #ccc;
     text-align: center;
-    font-size: 24px;
+    font-size: calc(var(--square-cell-size) / 2);
     cursor: pointer;
 
     &[data-state="revealed"] {
