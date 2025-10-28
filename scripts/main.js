@@ -145,7 +145,7 @@ function handleCellClick(event) {
   const cell = event.currentTarget;
   // We only generate the mines after first click
   // This avoids player losing immediately
-  if (gameState.revealedCells === 0) {
+  if (!gameState.startedAt) {
     startGame(cell);
   }
   if (cell.dataset.isFlagged === "true") {
