@@ -4,12 +4,31 @@ const gameSettings = {
   mines: 10,
 };
 
-const gameState = {
+let gameState = {};
+const defaultGameState = Object.freeze({
   revealedCells: 0,
   flaggedCells: 0,
   startedAt: null,
   endedAt: null,
   timerInterval: null,
+});
+
+const difficulties = {
+  beginner: {
+    rows: 9,
+    columns: 9,
+    mines: 10,
+  },
+  intermediate: {
+    rows: 16,
+    columns: 16,
+    mines: 40,
+  },
+  expert: {
+    rows: 24,
+    columns: 24,
+    mines: 99,
+  },
 };
 
 const cellListeners = Object.freeze({
@@ -19,10 +38,27 @@ const cellListeners = Object.freeze({
 
 const game = document.getElementById("Game");
 
-initializeGame();
+document.querySelectorAll(".new-game").forEach((button) => {
+  button.addEventListener("click", (event) => {
+    const difficulty = event.target.dataset.difficulty;
+
+    const difficultyData = difficulties[difficulty] || difficulties.beginner;
+    gameSettings.rows = difficultyData.rows;
+    gameSettings.columns = difficultyData.columns;
+    gameSettings.mines = difficultyData.mines;
+
+    initializeGame();
+  });
+});
 
 function initializeGame() {
+  resetGame();
   fillBoard();
+}
+
+function resetGame() {
+  // set game state to default
+  gameState = { ...defaultGameState };
 }
 
 function fillBoard() {
@@ -35,7 +71,7 @@ function fillBoard() {
       fragment.appendChild(cellElement);
     }
   }
-  game.appendChild(fragment);
+  game.replaceChildren(fragment);
   document.documentElement.style.setProperty("--board-rows", gameSettings.rows);
   document.documentElement.style.setProperty(
     "--board-columns",
