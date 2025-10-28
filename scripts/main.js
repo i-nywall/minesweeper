@@ -239,20 +239,19 @@ function revealCell(cell) {
   // make sure to remove flag from cell when revealed
   removeFlag(cell);
 
+  const neighborPositions = getNeighbors(getPositionFromCell(cell));
+  const neighborCells = neighborPositions.map(getCell);
+  const neighboringMines = neighborCells.filter(isMine).length;
+  cell.dataset.neighboringMines = neighboringMines;
+  cell.textContent = neighboringMines;
+
   if (winCondition()) {
     winGame();
     return;
   }
 
-  const neighborPositions = getNeighbors(getPositionFromCell(cell));
-  const neighborCells = neighborPositions.map(getCell);
-  const neighboringMines = neighborCells.filter(isMine).length;
-
   if (neighboringMines === 0) {
     neighborCells.forEach(revealCell);
-  } else {
-    cell.dataset.neighboringMines = neighboringMines;
-    cell.textContent = neighboringMines;
   }
 }
 
