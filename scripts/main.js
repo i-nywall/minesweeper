@@ -59,6 +59,7 @@ function initializeGame() {
 function resetGame() {
   // set game state to default
   gameState = { ...defaultGameState };
+  updateTimer();
   updateMineCount();
 }
 
@@ -87,10 +88,18 @@ function startGame(startingCell) {
 
 function startTimer() {
   gameState.startedAt = Date.now();
-  gameState.timerInterval = setInterval(() => {
-    const elapsed = Date.now() - gameState.startedAt;
-    document.querySelector(".timer").textContent = formatTime(elapsed);
-  }, 1000);
+  gameState.timerInterval = setInterval(updateTimer, 1000);
+}
+
+function updateTimer() {
+  let elapsed;
+  if (!gameState.startedAt) {
+    elapsed = 0;
+  } else {
+    elapsed = Date.now() - gameState.startedAt;
+  }
+
+  document.querySelector(".timer").textContent = formatTime(elapsed);
 }
 
 function formatTime(ms) {
@@ -98,7 +107,7 @@ function formatTime(ms) {
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
 
-  const formattedHours = (hours % 24).toString().padStart(2, "0");
+  const formattedHours = hours.toString().padStart(2, "0");
   const formattedMinutes = (minutes % 60).toString().padStart(2, "0");
   const formattedSeconds = (seconds % 60).toString().padStart(2, "0");
 
