@@ -1,4 +1,5 @@
 main {
+  font-family: "Roboto", system-ui, sans-serif;
   min-height: 100vh;
   width: 100%;
   display: grid;
@@ -19,6 +20,7 @@ main {
   max-width: 32rem;
 
   h1 {
+    font-family: "Roboto Condensed";
     font-size: 2rem;
     font-weight: 700;
   }
@@ -62,6 +64,7 @@ main {
 
 .game {
   .header {
+    font-family: "Roboto Mono", monospace;
     display: flex;
     justify-content: center;
     gap: 1rem;
