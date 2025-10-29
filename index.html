@@ -13,16 +13,21 @@
   </head>
   <body>
     <main>
-      <div>
+      <div class="menu">
+        <h1>Minesweeper</h1>
         <button class="new-game" data-difficulty="beginner">Beginner</button>
         <button class="new-game" data-difficulty="intermediate">
           Intermediate
         </button>
         <button class="new-game" data-difficulty="expert">Expert</button>
       </div>
-      <div><span class="timer"></span></div>
-      <div>Mines left: <span class="mine-count"></span></div>
-      <div id="Game"></div>
+      <div class="game hidden">
+        <div class="header">
+          <div><span class="timer"></span></div>
+          <div>Mines left: <span class="mine-count"></span></div>
+        </div>
+        <div class="game-board"></div>
+      </div>
     </main>
   </body>
 </html>

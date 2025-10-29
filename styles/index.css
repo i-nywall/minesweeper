@@ -1,4 +1,74 @@
-#Game {
+main {
+  min-height: 100vh;
+  width: 100%;
+  display: grid;
+  place-items: center;
+}
+.menu {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  background-color: #e5e5e5;
+  border-radius: 1rem;
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.1),
+    0 2px 4px -2px rgb(0 0 0 / 0.1);
+
+  width: 100%;
+  max-width: 32rem;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+  }
+
+  button {
+    --border-gradient: conic-gradient(blue, purple, blue);
+    color: black;
+    font-weight: 700;
+    border-radius: 2rem;
+    padding: 1rem;
+    cursor: pointer;
+    min-width: 10rem;
+
+    border: 0.25rem solid transparent;
+
+    transition: background 0.2s ease-in-out;
+
+    background:
+      linear-gradient(white) padding-box,
+      var(--border-gradient) border-box;
+
+    &:hover {
+      background:
+        linear-gradient(transparent) padding-box,
+        var(--border-gradient) border-box;
+    }
+
+    &[data-difficulty="beginner"] {
+      --border-gradient: linear-gradient(to right in oklch, #56ab2f, #a8e063);
+    }
+
+    &[data-difficulty="intermediate"] {
+      --border-gradient: linear-gradient(to right in oklch, #ffb75e, #ed8f03);
+    }
+
+    &[data-difficulty="expert"] {
+      --border-gradient: linear-gradient(to right in oklch, #ff416c, #ff4b2b);
+    }
+  }
+}
+
+.game {
+  .header {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+}
+
+.game-board {
   display: grid;
 
   /*Since there's no good way to make cells square and also fit the screen,
@@ -38,4 +108,8 @@
       color: transparent;
     }
   }
+}
+
+.hidden {
+  display: none;
 }

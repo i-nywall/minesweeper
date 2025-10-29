@@ -36,7 +36,7 @@ const cellListeners = Object.freeze({
   contextmenu: handleCellRightClick,
 });
 
-const game = document.getElementById("Game");
+const gameBoard = document.querySelector(".game-board");
 
 document.querySelectorAll(".new-game").forEach((button) => {
   button.addEventListener("click", (event) => {
@@ -54,6 +54,8 @@ document.querySelectorAll(".new-game").forEach((button) => {
 function initializeGame() {
   resetGame();
   fillBoard();
+  document.querySelector(".menu").classList.add("hidden");
+  document.querySelector(".game").classList.remove("hidden");
 }
 
 function resetGame() {
@@ -73,7 +75,7 @@ function fillBoard() {
       fragment.appendChild(cellElement);
     }
   }
-  game.replaceChildren(fragment);
+  gameBoard.replaceChildren(fragment);
   document.documentElement.style.setProperty("--board-rows", gameSettings.rows);
   document.documentElement.style.setProperty(
     "--board-columns",
