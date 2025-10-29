@@ -128,6 +128,17 @@ function createCell(row, col) {
   cellElement.dataset.state = "hidden";
   cellElement.dataset.isFlagged = "false";
   cellElement.classList.add("cell");
+
+  const flagIcon = document.createElement("span");
+  flagIcon.classList.add("material-symbols-outlined", "flag");
+  flagIcon.textContent = "flag";
+  cellElement.appendChild(flagIcon);
+
+  const mineIcon = document.createElement("span");
+  mineIcon.classList.add("material-symbols-outlined", "mine");
+  mineIcon.textContent = "explosion";
+  cellElement.appendChild(mineIcon);
+
   return cellElement;
 }
 
@@ -342,20 +353,17 @@ function winCondition() {
 
 function winGame() {
   alert("You win!");
-  const cells = document.querySelectorAll(".cell");
-  cells.forEach(disableCell);
-  endTimer();
+  endGame();
 }
 
 function gameOver() {
   alert("Game Over!");
+  endGame();
+}
+
+function endGame() {
   const cells = document.querySelectorAll(".cell");
-  // for now just reveal all mines
-  cells.forEach((cell) => {
-    disableCell(cell);
-    if (cell.dataset.isMine === "true") {
-      cell.dataset.state = "revealed";
-    }
-  });
+  cells.forEach(disableCell);
+  gameBoard.dataset.state = "ended";
   endTimer();
 }

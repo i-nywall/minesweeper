@@ -9,6 +9,12 @@
       @import url("styles/reset.css") layer(reset);
       @import url("styles/index.css");
     </style>
+    <!-- TODO: only fetch used icons instead of all of them-->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
+
     <script src="scripts/main.js" defer></script>
   </head>
   <body>
@@ -23,8 +29,14 @@
       </div>
       <div class="game hidden">
         <div class="header">
-          <div><span class="timer"></span></div>
-          <div>Mines left: <span class="mine-count"></span></div>
+          <p>
+            <span class="material-symbols-outlined"> timer </span
+            ><span class="timer"></span>
+          </p>
+          <p>
+            <span class="material-symbols-outlined"> explosion </span
+            ><span class="mine-count"></span>
+          </p>
         </div>
         <div class="game-board"></div>
       </div>

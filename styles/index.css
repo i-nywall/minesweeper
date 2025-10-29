@@ -65,11 +65,20 @@ main {
     display: flex;
     justify-content: center;
     gap: 1rem;
+
+    p {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
   }
 }
 
 .game-board {
   display: grid;
+
+  /* There shouldn't be any need to select text here */
+  user-select: none;
 
   /*Since there's no good way to make cells square and also fit the screen,
      I instead calculate a cell size that fits the screen.
@@ -91,21 +100,38 @@ main {
     font-size: calc(var(--square-cell-size) / 2);
     cursor: pointer;
 
+    .material-symbols-outlined {
+      display: none;
+    }
+
     &[data-state="revealed"] {
       background-color: #fff;
 
-      &[data-is-mine="true"] {
-        background-color: #f00;
+      /* Hide number for cells with no neighboring mines */
+      &[data-neighboring-mines="0"] {
+        color: transparent;
       }
     }
-
     &[data-is-flagged="true"] {
-      background-color: #0ff;
+      background-color: #d6d3d1;
+      .flag {
+        display: block;
+      }
     }
+  }
+}
 
-    /* Hide number for cells with no neighboring mines */
-    &[data-neighboring-mines="0"] {
-      color: transparent;
+.game-board[data-state="ended"] {
+  .cell {
+    &[data-is-mine="true"]:not([data-is-flagged="true"]) {
+      background-color: #ef4444;
+      .mine {
+        display: block;
+        color: #fff;
+      }
+    }
+    &[data-is-flagged="true"]:not([data-is-mine="true"]) .flag {
+      color: #ef4444;
     }
   }
 }
