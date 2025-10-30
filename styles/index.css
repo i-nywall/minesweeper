@@ -105,6 +105,7 @@ main {
 
     .material-symbols-outlined {
       display: none;
+      font-size: calc(var(--square-cell-size) / 2);
     }
 
     &[data-state="revealed"] {
